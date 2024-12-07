@@ -5,16 +5,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     systems.url = "github:nix-systems/default";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    pyproject-nix = {
-      url = "github:nix-community/pyproject.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
     inputs@{
       flake-parts,
-      pyproject-nix,
       systems,
       ...
     }:
@@ -24,12 +19,6 @@
       perSystem =
         { config, pkgs, ... }:
         let
-          python = pkgs.python3;
-          pyproject = pyproject-nix.lib.project.loadPyproject {
-            projectRoot = ./.;
-          };
-          pyattrs = pyproject.renderers.buildPythonPackage { inherit python; };
-          pythonEnv = python.withPackages (pyproject.renderers.withPackages { inherit python; });
           nativeDeps = [
             pkgs.nurl
             pkgs.nix-prefetch-git
@@ -40,7 +29,7 @@
         in
         {
           packages = {
-            gclient2nix = python.pkgs.buildPythonPackage pyattrs;
+            gclient2nix = pkgs.python3.pkgs.callPackage ./nix/package.nix { };
             default = pkgs.symlinkJoin {
               name = "gclient2nix-with-deps";
               paths = [ config.packages.gclient2nix ];
@@ -53,7 +42,7 @@
           };
           devShells.default = pkgs.mkShell {
             packages = nativeDeps ++ [
-              pythonEnv
+              (pkgs.python3.withPackages (ps: [ ps.click ]))
             ];
           };
         };
