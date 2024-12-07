@@ -24,7 +24,7 @@ buildPythonPackage {
     homepage = "https://github.com/WeetHet/gclient2nix";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [
-      weethet
+      WeetHet
     ];
   };
 }
