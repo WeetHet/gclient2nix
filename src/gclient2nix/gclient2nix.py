@@ -1,37 +1,11 @@
 from logging import Logger
 import os
-import re
 import subprocess
-import json
-from datetime import datetime
 import click
 
 from gclient2nix.repository import Repository
 from gclient2nix.repository.utils import load_temporary_cache, temporary_cache_dir
 from gclient2nix.transform_sources import transform_sources
-
-
-def get_gn_source(repo):
-    gn_pattern = r"'gn_version': 'git_revision:([0-9a-f]{40})'"
-    gn_commit = re.search(gn_pattern, repo.get_file("DEPS")).group(1)  # type: ignore
-    gn = subprocess.check_output(
-        [
-            "nix-prefetch-git",
-            "--quiet",
-            "https://gn.googlesource.com/gn",
-            "--rev",
-            gn_commit,
-        ]
-    )
-    gn = json.loads(gn)
-    return {
-        "gn": {
-            "version": datetime.fromisoformat(gn["date"]).date().isoformat(),
-            "url": gn["url"],
-            "rev": gn["rev"],
-            "sha256": gn["sha256"],
-        }
-    }
 
 
 @click.command()
