@@ -1,16 +1,12 @@
 [project]
-
 name = "gclient2nix"
-
 description = "Generate Nix expressions for projects based on the Google build tools gclient and gn from the chromium depot_tools"
-
-version = "0.1.0"
-
+version = "0.2.0"
 authors = [
+    { name = "Milan Hauth", email = "milahu@gmail.com" },
+    { name = "WeetHet", email = "stas.ale66@gmail.com" },
 ]
-
-readme = "readme.md"
-
+readme = "README.md"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
@@ -21,19 +17,14 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
 ]
 
-dependencies = [
-]
-
-
+dependencies = ["click~=8.1.4"]
 
 [project.urls]
+"Homepage" = "https://github.com/weethet/gclient2nix"
 
-"Homepage" = "https://github.com/milahu/gclient2nix"
-
-
+[project.scripts]
+gclient2nix = "gclient2nix.gclient2nix:main"
 
 [build-system]
-
 build-backend = "flit_core.buildapi"
-
-requires = ["flit_core >=3.2,<4"]
+requires = ["flit_core>=3.2,<4"]

@@ -1,1 +1,3 @@
-from .gclient2nix import *
+import warnings
+
+warnings.filterwarnings("ignore", category=SyntaxWarning)
