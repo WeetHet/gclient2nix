@@ -13,14 +13,20 @@ let
   sourceDerivations = {{
     {derivations}
   }};
+  namedSourceDerivations = builtins.mapAttrs (
+    path: drv:
+    drv.overrideAttrs {
+      name = lib.strings.sanitizeDerivationName path;
+    }
+  ) sourceDerivations;
 in
-runCommand "{name}" {{ }} (
+runCommand "combined-sources" { } (
   lib.concatLines (
     [ "mkdir $out" ]
     ++ (lib.mapAttrsToList (path: drv: ''
-      mkdir -p $out/${{path}}
-      cp --no-preserve=mode --reflink=auto -rfT ${{drv}} $out/${{path}}
-    '') sourceDerivations)
+      mkdir -p $out/${path}
+      cp --no-preserve=mode --reflink=auto -rfT ${drv} $out/${path}
+    '') namedSourceDerivations)
   )
 )
 """
