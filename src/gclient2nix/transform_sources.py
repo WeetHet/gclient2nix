@@ -20,7 +20,7 @@ let
     }}
   ) sourceDerivations;
 in
-runCommand {name} {{ }} (
+runCommand "{name}" {{ }} (
   lib.concatLines (
     [ "mkdir $out" ]
     ++ (lib.mapAttrsToList (path: drv: ''
