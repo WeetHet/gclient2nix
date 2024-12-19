@@ -15,17 +15,17 @@ let
   }};
   namedSourceDerivations = builtins.mapAttrs (
     path: drv:
-    drv.overrideAttrs {
+    drv.overrideAttrs {{
       name = lib.strings.sanitizeDerivationName path;
-    }
+    }}
   ) sourceDerivations;
 in
-runCommand "combined-sources" { } (
+runCommand {name} {{ }} (
   lib.concatLines (
     [ "mkdir $out" ]
     ++ (lib.mapAttrsToList (path: drv: ''
-      mkdir -p $out/${path}
-      cp --no-preserve=mode --reflink=auto -rfT ${drv} $out/${path}
+      mkdir -p $out/${{path}}
+      cp --no-preserve=mode --reflink=auto -rfT ${{drv}} $out/${{path}}
     '') namedSourceDerivations)
   )
 )
