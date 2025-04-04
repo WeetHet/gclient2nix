@@ -38,6 +38,7 @@
                 wrapProgram $out/bin/gclient2nix \
                   --set PATH ${pkgs.lib.makeBinPath nativeDeps}
               '';
+              meta.mainProgram = "gclient2nix";
             };
           };
           devShells.default = pkgs.mkShell {

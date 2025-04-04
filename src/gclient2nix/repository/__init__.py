@@ -73,7 +73,7 @@ class Repository:
         deps_file = self.get_file("DEPS")
         evaluated = gclient_eval.Parse(deps_file, filename="DEPS")
 
-        repo_vars = dict(evaluated["vars"]) | repo_vars
+        repo_vars = dict(evaluated.get("vars", {})) | repo_vars
 
         prefix = (
             f"{path}/"
@@ -83,7 +83,7 @@ class Repository:
 
         self.deps = {
             prefix + dep_name: repo_from_dep(dep)
-            for dep_name, dep in evaluated["deps"].items()
+            for dep_name, dep in evaluated.get("deps", {}).items()
             if (
                 gclient_eval.EvaluateCondition(dep["condition"], repo_vars)
                 if "condition" in dep
